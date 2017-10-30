@@ -6,15 +6,6 @@ import { register } from '../../../redux/actions/auth';
 import Config from 'react-native-config';
 import firebase from 'firebase';
 
-var fireBaseconfig = {
-    apiKey: "AIzaSyCyMpjgbuOf2tVH6aOKYxg3jMOG7nQPlSA",
-    authDomain: "joul-3afc1.firebaseapp.com",
-    databaseURL: "https://joul-3afc1.firebaseio.com",
-    projectId: "joul-3afc1",
-    storageBucket: "joul-3afc1.appspot.com",
-    messagingSenderId: "870174821785"
-}
-
 class Login extends React.Component {
     constructor (props) {
         super(props);
@@ -22,23 +13,17 @@ class Login extends React.Component {
             loading: false,
             route: 'Login',
             email: '',
-            password: ''
+            password: '',
+            loginSuccessful: false
         };
     }
-    componentWillMount() {
-        firebase.initializeApp({
-            apiKey: "AIzaSyCyMpjgbuOf2tVH6aOKYxg3jMOG7nQPlSA",
-            authDomain: "joul-3afc1.firebaseapp.com",
-            databaseURL: "https://joul-3afc1.firebaseio.com",
-            projectId: "joul-3afc1",
-            storageBucket: "joul-3afc1.appspot.com",
-            messagingSenderId: "870174821785"
-        })
-    }
     userLogin (e) {
-        this.signin()
-        this.props.onLogin(this.state.email, this.state.password);
         e.preventDefault();
+        this.signin();
+        if (this.state.loginSuccessful) {
+            this.setState({ loginSuccessful: false });
+            this.props.onLogin(this.state.email, this.state.password);
+        }
     }
     newUser (e) {
         this.props.onRegister();
@@ -50,7 +35,7 @@ class Login extends React.Component {
         });
         const { email, password } = this.state;
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => { this.setState({ error: '', loading: false }); })
+            .then(() => { this.setState({ error: '', loading: false, loginSuccessful: true }); })
             .catch(() => {
                 alert("login failed");
             });
@@ -60,7 +45,7 @@ class Login extends React.Component {
             <View style={styles.container}>
                 <StatusBar
                     barStyle="light-content"
-                    />
+                />
                 <TextInput
                     placeholder="email address"
                     placeholderTextColor="rgba(255,255,255,0.8)"
@@ -72,7 +57,7 @@ class Login extends React.Component {
                     onSubmitEditing={() => this.passwordInput.focus()}
                     value={this.state.email}
                     onChangeText={(text) => this.setState({ email: text })}
-                    />
+                />
                 <TextInput
                     placeholder="password"
                     placeholderTextColor="rgba(255,255,255,0.8)"
@@ -84,7 +69,7 @@ class Login extends React.Component {
                     value={this.state.password}
                     onChangeText={(text) => this.setState({ password: text })}
                     ref={(input) => this.passwordInput = input}
-                    />
+                />
 
                 <TouchableOpacity onPress={(e) => this.userLogin(e)} title={this.state.route} style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>LOGIN</Text>
@@ -96,6 +81,7 @@ class Login extends React.Component {
         );
     }
 }
+
 const mapStateToProps = (state, ownProps) => {
     return {
         isLoggedIn: state.auth.isLoggedIn,

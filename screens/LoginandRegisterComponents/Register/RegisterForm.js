@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, StatusBar } from '
 import { connect } from 'react-redux';
 import { login } from '../../../redux/actions/auth';
 import { register } from '../../../redux/actions/auth';
-import Config from 'react-native-config';
 import firebase from 'firebase';
 
 
@@ -22,16 +21,7 @@ class Login extends React.Component {
             confirmPassword: '',
         };
     }
-    componentWillMount() {
-        firebase.initializeApp({
-            apiKey: "AIzaSyCyMpjgbuOf2tVH6aOKYxg3jMOG7nQPlSA",
-            authDomain: "joul-3afc1.firebaseapp.com",
-            databaseURL: "https://joul-3afc1.firebaseio.com",
-            projectId: "joul-3afc1",
-            storageBucket: "joul-3afc1.appspot.com",
-            messagingSenderId: "870174821785"
-        })
-    }
+
     checkFormsAndRegister (e) {
         var errorMessage = "";
         var emailValid = false;
