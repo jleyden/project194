@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Image} from 'react-native';
+import { StyleSheet, TouchableOpacity, ScrollView, Image, Alert} from 'react-native';
 import { Container, Header, Content, Text, Icon,
    Left, Body, Right, Switch, Title,
    Thumbnail } from 'native-base';
+import { connect } from 'react-redux';
+import { logout } from '../../redux/actions/auth';
 import firebase from 'firebase'
 import 'firebase/firestore';
 import { List, ListItem } from 'react-native-elements'
 
 import icon from './profile.png'
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
 
 	static navigationOptions = {
 		tabBarLabel: 'Profile',
@@ -51,7 +53,6 @@ export default class Profile extends React.Component {
 		)
 	}
 
-
 	updateEvents() {
 		const eventsRef = this.props.screenProps.fireStoreRefs.events
 		eventsRef.orderBy("time", "desc").onSnapshot(
@@ -66,6 +67,26 @@ export default class Profile extends React.Component {
 			}
 		)
 	}
+
+	confirmLogout() {
+    Alert.alert(
+        'Are you sure you want to logout?','',
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'Logout', onPress: () => this.logout()},
+        ],
+        { cancelable: false }
+    )
+	}
+
+	logout() {
+    // firebase.auth().signOut().then(function() {
+    //   this.props.onLogout()
+    // }).catch(function(error) {
+    //   console.log(error)
+    //   console.log("wtf")
+    // });
+  }
 
   render() {
   	const user = this.props.screenProps.user
@@ -91,13 +112,15 @@ export default class Profile extends React.Component {
       <Container style={styles.container}>
         <Header>
           <Left>
-            <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
+						<Text style={styles.money}>{`${wallet} jouls`}</Text>
           </Left>
           <Body>
             <Title style={styles.displayName}>{user ? user.displayName : null}</Title>
           </Body>
           <Right>
-            <Text style={styles.money}>{`${wallet} jouls`}</Text>
+						{/*<TouchableOpacity onPress={() => this.confirmLogout()}>*/}
+							{/*<Text style={styles.logout}>Logout</Text>*/}
+						{/*</TouchableOpacity>*/}
           </Right>
         </Header>
 	      <ScrollView>
@@ -128,6 +151,19 @@ export default class Profile extends React.Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    isLoggedIn: state.auth.isLoggedIn,
+    register: state.auth.register
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogout: () => { dispatch(logout()); },
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -143,6 +179,9 @@ const styles = StyleSheet.create({
   },
   money: {
     color: '#009688',
+    fontSize: 20
+  },
+  logout: {
     fontSize: 20
   },
   item: {
@@ -167,3 +206,5 @@ const styles = StyleSheet.create({
   	color: '#009688'
 	}
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

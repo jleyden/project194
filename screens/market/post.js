@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button,
-	TouchableOpacity, TextInput, KeyboardAvoidingView, Alert } from 'react-native';
+import { StyleSheet, Text, View,
+	TouchableOpacity, TextInput, Alert } from 'react-native';
 import { NavigationActions } from 'react-navigation'
-import { Container, Header, Content, Title, Body } from 'native-base'
+import { Container, Header, Content, Title } from 'native-base'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase'
 import 'firebase/firestore';
@@ -30,7 +30,6 @@ export default class Post extends React.Component {
       user: this.props.screenProps.user,
     })
   }
-
 
   checkFields() {
 		if (!this.state.title) {

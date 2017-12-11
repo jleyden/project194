@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Secured from './Secured';
-import Login from './LoginandRegisterComponents/Login/Login';
+import Logins from './LoginandRegisterComponents/Login/index';
 import Register from './LoginandRegisterComponents/Register/Register';
 import firebase from 'firebase';
 
@@ -31,7 +31,7 @@ class Application extends React.Component {
         } else if (this.props.register) {
           return <Register/>
         } else {
-          return <Login />;
+          return <Logins />;
         }
     }
 }

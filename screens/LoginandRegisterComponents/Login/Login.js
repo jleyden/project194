@@ -1,17 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInpu, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StackNavigator } from 'react-navigation'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import LoginForm from './LoginForm';
 export default class Login extends React.Component {
+
+  static navigationOptions = {
+    header: null
+  }
     render() {
         return (
-            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+            <KeyboardAwareScrollView
+                behavior="padding"
+                resetScrollToCoords={{ x: 0, y: 0 }}
+                contentContainerStyle={styles.container}
+                scrollEnabled={true}>
                 <View style ={styles.logoContainer}>
                     <Text style={styles.bigText}>JOUL</Text>
                 </View>
                 <View style={styles.formContainer}>
                     <LoginForm/>
                 </View>
-            </KeyboardAvoidingView>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Reset', {})} style={styles.newUserButton}>
+                    <Text style={styles.buttonText}>Forgot password</Text>
+                </TouchableOpacity>
+            </KeyboardAwareScrollView>
         );
     }
 }
@@ -35,5 +48,14 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 60,
         opacity: 1
-    }
+    },
+  newUserButton: {
+    paddingVertical: 15,
+    marginTop: 60,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontWeight: '700'
+  }
 });
